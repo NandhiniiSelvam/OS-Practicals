@@ -1,0 +1,25 @@
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+
+int main() {
+    char data[] = "Hello, UNIX System Calls!";
+    char buffer[100];
+    int fd = open("example.txt", O_CREAT | O_WRONLY, 0644);
+    if (fd < 0) {
+        perror("Error creating file");
+        return 1;
+    }
+    write(fd, data, sizeof(data));
+    close(fd);
+    fd = open("example.txt", O_RDONLY);
+    if (fd < 0) {
+        perror("Error opening file");
+        return 1;
+    }
+    read(fd, buffer, sizeof(data));
+    printf("Read from file: %s\n", buffer);
+    close(fd);
+
+    return 0;
+}
