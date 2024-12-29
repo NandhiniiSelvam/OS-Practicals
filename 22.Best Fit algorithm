@@ -1,0 +1,23 @@
+#include <stdio.h>
+void bestFit(int block[], int b, int process[], int p) {
+    int alloc[p]; for (int i = 0; i < p; i++) alloc[i] = -1;
+
+    for (int i = 0; i < p; i++) {
+        int best = -1;
+        for (int j = 0; j < b; j++)
+            if (block[j] >= process[i] && (best == -1 || block[j] < block[best]))
+                best = j;
+        if (best != -1) {
+            alloc[i] = best;
+            block[best] -= process[i];
+        }
+    }
+    printf("Process Size Block\n");
+    for (int i = 0; i < p; i++)
+        printf("P%d\t%d\t%s\n", i + 1, process[i], alloc[i] != -1 ? "B" + alloc[i] + 1 : "Not Allocated");
+}
+int main() {
+    int block[] = {100, 500, 200, 300, 600}, process[] = {212, 417, 112, 426};
+    bestFit(block, 5, process, 4);
+    return 0;
+}
