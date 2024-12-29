@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <string.h>
+#include <unistd.h>
+
+struct msg_buffer {
+    long msg_type;
+    char msg_text[100];
+};
+int main() {
+    key_t key = ftok("msgfile", 65);  
+    int msgid = msgget(key, 0666 | IPC_CREAT); 
+
+    if (fork() == 0) { 
+        struct msg_buffer message;
+        msgrcv(msgid, &message, sizeof(message.msg_text), 1, 0); 
+        printf("Receiver: Message received: %s\n", message.msg_text);
+    } else { 
+        struct msg_buffer message;
+        message.msg_type = 1;  
+        strcpy(message.msg_text, "Hello from message queue!"); 
+        msgsnd(msgid, &message, sizeof(message.msg_text), 0); 
+        printf("Sender: Message sent.\n");
+        wait(NULL); 
+        msgctl(msgid, IPC_RMID, NULL);  
+    }
+    return 0;
+}
