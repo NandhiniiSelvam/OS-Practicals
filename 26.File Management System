@@ -1,0 +1,21 @@
+#include <stdio.h>
+
+int main() {
+    FILE *file;
+
+    // Create and write to file
+    file = fopen("file.txt", "w");
+    if (!file) return 1;
+    fprintf(file, "Hello, File Management!");
+    fclose(file);
+
+    // Read from file
+    file = fopen("file.txt", "r");
+    if (!file) return 1;
+    char buffer[100];
+    fgets(buffer, sizeof(buffer), file);
+    printf("Read from file: %s\n", buffer);
+    fclose(file);
+
+    return 0;
+}
