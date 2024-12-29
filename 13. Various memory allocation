@@ -1,0 +1,35 @@
+#include <stdio.h>
+void allocate_memory(int blocks[], int n_blocks, int processes[], int n_processes, int strategy) {
+    printf("\n%s Fit Allocation:\n", strategy == 0 ? "First" : strategy == 1 ? "Best" : "Worst");
+    for (int i = 0; i < n_processes; i++) {
+        int index = -1;
+        for (int j = 0; j < n_blocks; j++) {
+            if (blocks[j] >= processes[i] && 
+                (index == -1 || 
+                 (strategy == 0) || 
+                 (strategy == 1 && blocks[j] < blocks[index]) || 
+                 (strategy == 2 && blocks[j] > blocks[index]))) {
+                index = j;
+            }
+        }
+        if (index != -1) {
+            printf("Process %d -> Block %d\n", i + 1, index + 1);
+            blocks[index] -= processes[i];
+        } else {
+            printf("Process %d -> Not Allocated\n", i + 1);
+        }
+    }
+}
+int main() {
+    int blocks[] = {100, 500, 200, 300, 600};
+    int processes[] = {212, 417, 112, 426};
+    int n_blocks = sizeof(blocks) / sizeof(blocks[0]);
+    int n_processes = sizeof(processes) / sizeof(processes[0]);
+    int blocks_copy[5];
+
+    for (int strategy = 0; strategy < 3; strategy++) {
+        for (int i = 0; i < n_blocks; i++) blocks_copy[i] = blocks[i];
+        allocate_memory(blocks_copy, n_blocks, processes, n_processes, strategy);
+    }
+    return 0;
+}
