@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <pthread.h>
+#include <semaphore.h>
+#define N 5
+sem_t mutex, forks[N];
+void* philosopher(void* num) {
+    int i = *(int*)num;
+    while (1) {
+        printf("Philosopher %d is thinking.\n", i);
+        sem_wait(&forks[i]);
+        sem_wait(&forks[(i + 1) % N]);
+        printf("Philosopher %d is eating.\n", i);
+        sem_post(&forks[i]);
+        sem_post(&forks[(i + 1) % N]);
+    }
+}
+int main() {
+    pthread_t threads[N];
+    int phil[N];
+    sem_init(&mutex, 0, 1);
+    for (int i = 0; i < N; i++) sem_init(&forks[i], 0, 1);
+
+    for (int i = 0; i < N; i++) {
+        phil[i] = i;
+        pthread_create(&threads[i], NULL, philosopher, &phil[i]);
+    }
+    for (int i = 0; i < N; i++) pthread_join(threads[i], NULL);
+    return 0;
+}
