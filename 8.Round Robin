@@ -1,0 +1,39 @@
+#include <stdio.h>
+int main() {
+    int n, bt[10], wt[10], tat[10], rt[10], tq, i, total_wt = 0, total_tat = 0;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    printf("Enter burst times and time quantum: \n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &bt[i]);
+        rt[i] = bt[i]; // Remaining time
+    }
+    scanf("%d", &tq);
+    int t = 0;
+    while(1) {
+        int done = 1;
+        for (i = 0; i < n; i++) {
+            if (rt[i] > 0) {
+                done = 0;
+                if (rt[i] > tq) {
+                    rt[i] -= tq;
+                    t += tq;
+                } else {
+                    t += rt[i];
+                    wt[i] = t - bt[i];
+                    tat[i] = t;
+                    rt[i] = 0;
+                }
+            }
+        }
+        if (done) break;
+    }
+    printf("\nProcess\tBT\tWT\tTAT\n");
+    for (i = 0; i < n; i++) {
+        printf("P%d\t%d\t%d\t%d\n", i+1, bt[i], wt[i], tat[i]);
+        total_wt += wt[i];
+        total_tat += tat[i];
+    }
+    printf("\nAverage WT=%.2f, Average TAT=%.2f\n", total_wt / (float)n, total_tat / (float)n);
+    return 0;
+}
