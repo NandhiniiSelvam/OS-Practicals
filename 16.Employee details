@@ -1,0 +1,35 @@
+#include <stdio.h>
+typedef struct {
+    int id;
+    char name[20];
+    float salary;
+} Employee;
+int main() {
+    FILE *file = fopen("employee.dat", "wb+");
+    Employee emp;
+    int choice, id;
+    while (1) {
+        printf("\n1. Add Employee\n2. View Employee\n3. Exit\nChoice: ");
+        scanf("%d", &choice);
+        if (choice == 3) break;
+        switch (choice) {
+        case 1:
+            printf("ID: "); scanf("%d", &emp.id);
+            printf("Name: "); scanf("%s", emp.name);
+            printf("Salary: "); scanf("%f", &emp.salary);
+            fseek(file, (emp.id - 1) * sizeof(Employee), SEEK_SET);
+            fwrite(&emp, sizeof(Employee), 1, file);
+            break;
+        case 2:
+            printf("ID: "); scanf("%d", &id);
+            fseek(file, (id - 1) * sizeof(Employee), SEEK_SET);
+            if (fread(&emp, sizeof(Employee), 1, file))
+                printf("ID: %d, Name: %s, Salary: %.2f\n", emp.id, emp.name, emp.salary);
+            else
+                printf("Employee not found.\n");
+            break;
+        }
+    }
+    fclose(file);
+    return 0;
+}
