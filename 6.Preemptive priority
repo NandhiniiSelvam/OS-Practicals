@@ -1,0 +1,37 @@
+#include <stdio.h>
+typedef struct {
+    int pid, bt, wt, tat, pr;
+} Process;
+int main() {
+    int n, total_wt = 0, total_tat = 0;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    Process p[n];
+    printf("Enter burst times and priorities:\n");
+    for (int i = 0; i < n; i++) {
+        p[i].pid = i + 1;
+        scanf("%d %d", &p[i].bt, &p[i].pr);
+        p[i].wt = p[i].tat = 0;
+    }
+    for (int t = 0; t < 100; t++) {
+        int idx = -1, min_pr = 1000;
+        for (int i = 0; i < n; i++) {
+            if (p[i].bt > 0 && p[i].pr < min_pr) {
+                min_pr = p[i].pr;
+                idx = i;
+            }
+        }
+        if (idx != -1) {
+            p[idx].bt--;
+            for (int i = 0; i < n; i++) if (p[i].bt > 0 && i != idx) p[i].wt++;
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        p[i].tat = p[i].wt + p[i].bt;
+        total_wt += p[i].wt;
+        total_tat += p[i].tat;
+        printf("P%d: BT=%d, WT=%d, TAT=%d\n", p[i].pid, p[i].bt, p[i].wt, p[i].tat);
+    }
+    printf("Average WT=%.2f, Average TAT=%.2f\n", total_wt / (float)n, total_tat / (float)n);
+    return 0;
+}
