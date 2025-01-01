@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int compare(const void *a, const void *b) { return (*(int *)a - *(int *)b); }
+
+int main() {
+    int n, head, disk, totalSeek = 0, i;
+    printf("Disk size, requests, head position: ");
+    scanf("%d %d %d", &disk, &n, &head);
+
+    int req[n + 2];
+    for (i = 0; i < n; i++) scanf("%d", &req[i]);
+    req[n++] = head, req[n++] = 0, req[n++] = disk - 1;
+
+    qsort(req, n, sizeof(int), compare);
+
+    int pos = 0;
+    while (req[pos] < head) pos++;
+
+    printf("Order: ");
+    for (i = pos; i < n; i++) printf("%d ", req[i]);
+    for (i = 0; i < pos; i++) printf("%d ", req[i]);
+
+    for (i = 1; i < n; i++) totalSeek += abs(req[i] - req[i - 1]);
+    printf("\nSeek Time: %d\n", totalSeek);
+}
