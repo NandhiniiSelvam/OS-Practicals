@@ -1,0 +1,15 @@
+#include <stdio.h>
+
+void sequentialAllocation(int records[], int n) {
+    printf("Records in file:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Record %d: %d\n", i + 1, records[i]);
+    }
+}
+
+int main() {
+    int records[] = {10, 20, 30, 40, 50}; // Example file records
+    int n = sizeof(records) / sizeof(records[0]);
+    sequentialAllocation(records, n);
+    return 0;
+}
