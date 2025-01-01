@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+int main() {
+    struct stat fileStat;
+    const char *filename = "example.txt";
+
+    // Displaying initial file permissions using stat
+    if (stat(filename, &fileStat) == -1) {
+        perror("stat");
+        return 1;
+    }
+
+    printf("File: %s\n", filename);
+    printf("Permissions: %o\n", fileStat.st_mode & 0777);  // Mask the other bits to get the permissions
+
+    // Changing file permissions (e.g., making it readable, writable, and executable for owner)
+    if (chmod(filename, S_IRUSR | S_IWUSR | S_IXUSR) == -1) {
+        perror("chmod");
+        return 1;
+    }
+
+    // Display the updated permissions
+    if (stat(filename, &fileStat) == -1) {
+        perror("stat");
+        return 1;
+    }
+
+    printf("Updated Permissions: %o\n", fileStat.st_mode & 0777);
+    return 0;
+}
