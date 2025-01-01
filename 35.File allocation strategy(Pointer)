@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+void indexedAllocation(int indexBlock[], int dataBlocks[], int n) {
+    printf("File content accessed through index block:\n");
+    for (int i = 0; i < n; i++) {
+        printf("Index Block[%d] -> Data Block: %d, Content: %d\n", i, indexBlock[i], dataBlocks[indexBlock[i]]);
+    }
+}
+
+int main() {
+    int dataBlocks[] = {100, 200, 300, 400, 500}; // Example data blocks
+    int indexBlock[] = {0, 2, 4, 1, 3}; // Index block pointing to data blocks
+    int n = sizeof(indexBlock) / sizeof(indexBlock[0]);
+    indexedAllocation(indexBlock, dataBlocks, n);
+    return 0;
+}
